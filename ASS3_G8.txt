@@ -1,0 +1,147 @@
+/* NAME: FAKHIRA ANISA BINTI MOHD RADZI (A24CS0070)
+		 AFINA SOLEH BATRISYIA BINTI MOHD HISAFUDIN (A24CS0034)
+   DATE: 1 JANUARY 2025 */
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+const int uniNames = 99;
+
+//function prototype
+bool getInput(const string &filename, string university[], int intake[], int enrolment[], int output[], int &size);
+int calTotal(const int student[], int size);
+int getLowest(const int student[], int size);
+int getHighest(const int student[], int size);
+
+int main ()
+{
+	string university[uniNames];
+	int intake[uniNames], enrolment[uniNames], output[uniNames];
+	int count = 0;
+	
+	if (!getInput("input.txt", university, intake, enrolment, output, count)) {
+		return 1;
+	}
+	
+	ofstream outFile("output.txt");
+	if (!outFile.is_open()) {
+		cout << "Error. Unable to open output file." << endl;
+		return 1;
+	}
+	
+	// Task 5
+	outFile << "           NUMBER OF STUDENTS' INTAKE, ENROLMENT AND OUTPUT" << endl;
+	outFile << "           IN PUBLIC UNIVERSITIES (2024)" << endl;
+	outFile << "----------------------------------------------------------------------" << endl;
+	outFile << setw(25) << left << "University"   
+        	<< setw(15) << right << "Intake"      
+        	<< setw(15) << "Enrolment"           
+        	<< setw(15) << "Output"              
+        	<< endl;
+	outFile << "----------------------------------------------------------------------" << endl;
+	
+	for (int i = 0; i < count; i++) {
+		outFile << setw(25) << left << university[i]
+                << setw(15) << right << intake[i]
+                << setw(15) << enrolment[i]
+                << setw(15) << output[i] << endl;
+	}
+	
+	//task 6
+	int totalIntake = calTotal(intake, count);
+	int totalEnrolment = calTotal(enrolment, count);
+	int totalOutput = calTotal(output, count);
+	
+	double avgIntake = static_cast<double>(totalIntake) / count;
+	double avgEnrolment = static_cast<double>(totalEnrolment) / count;
+	double avgOutput = static_cast<double>(totalOutput) / count;
+	
+	outFile << "----------------------------------------------------------------------" << endl;
+	outFile << setw(25) << left << "TOTAL"
+            << setw(15) << right << totalIntake
+            << setw(15) << totalEnrolment
+            << setw(15) << totalOutput << endl;
+	outFile << setw(25) << left << "AVERAGE"
+            << setw(15) << right << fixed << setprecision(2) << avgIntake
+            << setw(15) << avgEnrolment
+            << setw(15) << avgOutput << endl;
+	outFile << "----------------------------------------------------------------------" << endl;
+	
+	//task 7
+	int highestIntake = getHighest(intake, count);
+	int lowestIntake = getLowest(intake, count);
+	
+	int highestEnrolment = getHighest(enrolment, count);
+	int lowestEnrolment = getLowest(enrolment, count);
+	
+	int highestOutput = getHighest(output, count);
+	int lowestOutput = getLowest(output, count);
+	
+	outFile << "THE LOWEST NUMBER OF STUDENTS' INTAKE = " << intake[lowestIntake] << " (" << university[lowestIntake] << ")" << endl;
+	outFile << "THE HIGHEST NUMBER OF STUDENTS' INTAKE = " << intake[highestIntake] << " (" << university[highestIntake] << ")" << endl;
+
+	outFile << "THE LOWEST NUMBER OF STUDENTS' ENROLMENT = " << enrolment[lowestEnrolment] << " (" << university[lowestEnrolment] << ")" << endl;
+	outFile << "THE HIGHEST NUMBER OF STUDENTS' ENROLMENT = " << enrolment[highestEnrolment] << " (" << university[highestEnrolment] << ")" << endl;
+
+	outFile << "THE LOWEST NUMBER OF STUDENTS' OUTPUT = " << output[lowestOutput] << " (" << university[lowestOutput] << ")" << endl;
+	outFile << "THE HIGHEST NUMBER OF STUDENTS' OUTPUT = " << output[highestOutput] << " (" << university[highestOutput] << ")" << endl;
+
+	outFile << "Range of Intake: " << intake[highestIntake] - intake[lowestIntake] << endl;
+	outFile << "Range of Enrolment: " << enrolment[highestEnrolment] - enrolment[lowestEnrolment] << endl;
+	outFile << "Range of Output: " << output[highestOutput] - output[lowestOutput] << endl;
+	outFile << "----------------------------------------------------------------------" << endl;
+
+	outFile.close();
+	cout << "Data successfully processed and written to output.txt." << endl;
+
+	return 0;
+}
+// Task 1
+bool getInput(const string &filename, string university[], int intake[], int enrolment[], int output[], int &size) {
+	ifstream inFile(filename.c_str());
+	if (!inFile.is_open()) {
+		cout << "Error: Unable to open file." << endl;
+		return false;
+	}
+	
+	size = 0;
+	while (inFile >> university[size] >> intake[size] >> enrolment[size] >> output[size]) {
+		size++;
+	}
+	
+	inFile.close();
+	return true;
+}
+
+// Task 2
+int calTotal(const int student[], int size) {
+	int total = 0;
+	for (int i = 0; i < size; i++) {
+		total += student[i];
+	}
+	return total;
+}
+
+// Task 3
+int getLowest(const int student[], int size) {
+	int minIndex = 0;
+	for (int i = 0; i < size; i++) {
+		if (student[i] < student[minIndex]) {
+			minIndex = i;
+		}
+	}
+	return minIndex;
+}
+
+// Task 4
+int getHighest(const int student[], int size) {
+	int maxIndex = 0;
+	for (int i = 0; i < size; i++) {
+		if (student[i] > student[maxIndex]) {
+			maxIndex = i;
+		}
+	}
+	return maxIndex;
+}
